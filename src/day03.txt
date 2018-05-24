@@ -1,0 +1,172 @@
+方法结果缓存通知
+		C
+			int f(int i)
+
+
+		C c=ac.getBean("c");
+
+		c.f(5);   7	执行方法
+		c.f(5);	  7	从缓存中获得
+		c.f(5);   7	从缓存中获得
+
+
+		c.f(6);	  8	执行方法
+		c.fn(5);  9	执行方法
+
+		C c2=ac.getBean("c2");
+		c2.f(5);  8	执行方法
+
+		对象 方法 参数
+
+
+
+		5%2	1
+		-5%2	-1
+		5%-2	1
+		-5%-2	-1
+
+
+Advisor
+	Advisor=Advice+Pointcut
+		通知	位置
+
+预定义切入点
+	org.springframework.aop.support包下
+		NameMatchMethodPointcut
+		NameMatchMethodPointcutAdvisor
+
+自动代理
+	多个目标对象需要使用相同的一组切面
+	org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator
+
+
+引入
+	动态的为一个类添加新的属性和方法
+	Spring只实现了动态添加方法
+	Spring认为动态添加属性违背了封装原则
+
+	public class SomeServiceProxy implements ISomeService,IOtherService {
+	
+		private ISomeServicet target;
+
+		public void doSome(){
+			target.doSome();
+		}
+
+		public void doOther(){
+			xxx
+		}
+	}
+
+
+Spring AOP 2.x
+	特点
+		非倾入性
+		完全基于配置
+		使用AspectJ的切点表达式
+		xml中引入新的命名空间
+
+	Advice
+		before
+		after after-returning after-throwing
+		around	对方法有要求
+			1.返回类型Object
+			2.参数ProceedingJoinPoint
+			3.throws Throwable
+
+	切点表达式
+		within：匹配类的所有方法
+			within(包名.类名)
+
+		execution：匹配指定的方法
+			execution(void doSome())
+			execution(void aop10.SomeServiceImpl.doSome())
+			execution(void doOther())
+			execution(java.lang.String doOther(java.lang.String))
+			execution(* doOther(..))
+			execution(* doOther(*))
+			execution(* doOther(..,java.lang.String))
+
+			execution(* do*(..))
+			execution(* *(..))
+
+			execution(* aop10.SomeServiceImpl.*(..))
+			execution(* aop10.*.*(..))
+			execution(* aop10.*ServiceImpl.*(..))
+			execution(* aop10..*.*(..))
+
+		not and or
+			execution(* aop10.SomeServiceImpl.doSome(..)) or within(aop10.OtherServiceImpl)
+			
+
+annotation
+	扫包
+		<context:component-scan base-package=""></context:component-scan>
+	
+	注解（标注）配置后处理Bean
+		org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
+
+
+	组件
+		@Component
+		@Component("Bean的名字")
+
+		表示层		业务层		持久层
+		@Controller	@Service	@Repository
+
+
+	根据类型自动装配
+		@Autowired
+
+	根据名字自动装配
+		@Autowired
+		@Qualifier("Bean的名字")
+
+
+	简单值装配
+		@Value
+
+	组件作用域
+		@Scope
+
+	创建时机
+		@Lazy
+
+
+
+	JSR250注解
+		配置后处理Bean
+			org.springframework.context.annotation.CommonAnnotationBeanPostProcessor
+
+		自动装配
+			@Resource
+		
+		init
+			@PostConstruct
+
+		destroy
+			@PreDestroy
+	
+
+	
+	context命名空间
+		替代后处理Bean
+			<context:annotation-config></context:annotation-config>
+			
+			高版本spring不需要做任何配置
+			
+
+		扫包
+			<context:component-scan base-package=""></context:component-scan>
+			
+
+		替代访问Properties文件的后处理Bean
+			<context:property-placeholder location=""/>
+		
+
+
+
+
+
+
+
